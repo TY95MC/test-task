@@ -59,7 +59,7 @@ public class Main {
         }
 
         int medianPriceIndex;
-        medianPriceIndex = prices.size() %2 == 0 ? (prices.size() - 1) / 2 : prices.size() / 2;
+        medianPriceIndex = prices.size() % 2 == 0 ? (prices.size() - 1) / 2 : prices.size() / 2;
 
         System.out.println("Средняя цена: " + averagePrice);
         System.out.println("Медианная цена: " + prices.get(medianPriceIndex));
