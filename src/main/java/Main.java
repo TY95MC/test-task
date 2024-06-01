@@ -28,7 +28,7 @@ public class Main {
         LocalDateTime departure;
         long flightDuration;
         int averagePrice = 0;
-        List<Integer> medianPrice = new ArrayList<>();
+        List<Integer> prices = new ArrayList<>();
         HashMap<String, Long> carrierToDuration = new HashMap<>();
 
         for (Ticket t : tickets) {
@@ -41,12 +41,11 @@ public class Main {
                     Math.min(carrierToDuration.getOrDefault(carrier, flightDuration), flightDuration));
 
             averagePrice += t.getPrice();
-            medianPrice.add(t.getPrice());
+            prices.add(t.getPrice());
         }
 
         averagePrice = averagePrice / tickets.size();
-        medianPrice.sort(Comparator.comparing(Integer::intValue));
-
+        prices.sort(Comparator.comparing(Integer::intValue));
 
         for (String key : carrierToDuration.keySet()) {
             if (carrierToDuration.get(key) % 60 == 0) {
@@ -59,9 +58,12 @@ public class Main {
             }
         }
 
+        int medianPriceIndex;
+        medianPriceIndex = prices.size() %2 == 0 ? (prices.size() - 1) / 2 : prices.size() / 2;
+
         System.out.println("Средняя цена: " + averagePrice);
-        System.out.println("Медианная цена: " + medianPrice.get(medianPrice.size() / 2));
+        System.out.println("Медианная цена: " + prices.get(medianPriceIndex));
         System.out.println("Разница между средней и медианной ценой: "
-                + (averagePrice - medianPrice.get(medianPrice.size() / 2)));
+                + (averagePrice - prices.get(medianPriceIndex)));
     }
 }
