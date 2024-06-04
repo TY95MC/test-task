@@ -4,8 +4,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,12 +21,12 @@ public class Main {
         Order order = mapper.readValue(in, Order.class);
         List<Ticket> tickets = order.getTickets().stream()
                 .filter(t -> t.getOrigin().equals("VVO") && t.getDestination().equals("TLV")
-                        || t.getOrigin().equals("TLV") && t.getDestination().equals("VVO"))
+                || t.getOrigin().equals("TLV") && t.getDestination().equals("VVO"))
                 .collect(Collectors.toList());
 
         String carrier;
-        OffsetDateTime arrival = null;
-        OffsetDateTime departure = null;
+        LocalDateTime arrival;
+        LocalDateTime departure;
         long flightDuration;
         int averagePrice = 0;
         List<Integer> prices = new ArrayList<>();
@@ -36,17 +34,8 @@ public class Main {
 
         for (Ticket t : tickets) {
             carrier = t.getCarrier();
-            switch (t.getOrigin()) {
-                case "VVO":
-                    arrival = LocalDateTime.of(t.getArrivalDate(), t.getArrivalTime()).atOffset(ZoneOffset.ofHours(3));
-                    departure = LocalDateTime.of(t.getDepartureDate(), t.getDepartureTime()).atOffset(ZoneOffset.ofHours(10));
-                    break;
-                case "TLV":
-                    arrival = LocalDateTime.of(t.getArrivalDate(), t.getArrivalTime()).atOffset(ZoneOffset.ofHours(10));
-                    departure = LocalDateTime.of(t.getDepartureDate(), t.getDepartureTime()).atOffset(ZoneOffset.ofHours(3));
-                    break;
-            }
-
+            arrival = LocalDateTime.of(t.getArrivalDate(), t.getArrivalTime());
+            departure = LocalDateTime.of(t.getDepartureDate(), t.getDepartureTime());
             flightDuration = MINUTES.between(departure, arrival);
 
             carrierToDuration.put(carrier,
