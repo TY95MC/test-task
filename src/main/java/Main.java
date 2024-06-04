@@ -23,7 +23,7 @@ public class Main {
         Order order = mapper.readValue(in, Order.class);
         List<Ticket> tickets = order.getTickets().stream()
                 .filter(t -> t.getOrigin().equals("VVO") && t.getDestination().equals("TLV")
-                || t.getOrigin().equals("TLV") && t.getDestination().equals("VVO"))
+                        || t.getOrigin().equals("TLV") && t.getDestination().equals("VVO"))
                 .collect(Collectors.toList());
 
         String carrier;
@@ -36,28 +36,27 @@ public class Main {
 
         for (Ticket t : tickets) {
             carrier = t.getCarrier();
-            switch (t.getOrigin()){
+            switch (t.getOrigin()) {
                 case "VVO":
-                    departure = LocalDateTime.of(t.getDepartureDate(), t.getDepartureTime()).atOffset(ZoneOffset.ofHours(10));
-                    arrival = LocalDateTime.of(t.getArrivalDate(), t.getArrivalTime()).atOffset(ZoneOffset.ofHours(3));
+                    departure = LocalDateTime.of(t.getDepartureDate(),
+                            t.getDepartureTime()).atOffset(ZoneOffset.ofHours(10));
+                    arrival = LocalDateTime.of(t.getArrivalDate(),
+                            t.getArrivalTime()).atOffset(ZoneOffset.ofHours(3));
                     break;
                 case "TLV":
-                    departure = LocalDateTime.of(t.getDepartureDate(), t.getDepartureTime()).atOffset(ZoneOffset.ofHours(3));
-                    arrival = LocalDateTime.of(t.getArrivalDate(), t.getArrivalTime()).atOffset(ZoneOffset.ofHours(10));
+                    departure = LocalDateTime.of(t.getDepartureDate(),
+                            t.getDepartureTime()).atOffset(ZoneOffset.ofHours(3));
+                    arrival = LocalDateTime.of(t.getArrivalDate(),
+                            t.getArrivalTime()).atOffset(ZoneOffset.ofHours(10));
                     break;
             }
 
             flightDuration = MINUTES.between(departure, arrival);
-
             carrierToDuration.put(carrier,
                     Math.min(carrierToDuration.getOrDefault(carrier, flightDuration), flightDuration));
-
             averagePrice += t.getPrice();
             prices.add(t.getPrice());
         }
-
-        averagePrice = averagePrice / tickets.size();
-        prices.sort(Comparator.comparing(Integer::intValue));
 
         for (String key : carrierToDuration.keySet()) {
             if (carrierToDuration.get(key) % 60 == 0) {
@@ -70,12 +69,15 @@ public class Main {
             }
         }
 
-        int medianPriceIndex;
-        medianPriceIndex = prices.size() / 2;
+        averagePrice = averagePrice / tickets.size();
+        prices.sort(Comparator.comparing(Integer::intValue));
+        int medianPrice = prices.size() % 2 == 0
+                ? (prices.get((prices.size() - 1) / 2) + prices.get(prices.size() / 2)) / 2
+                : prices.get(prices.size() / 2);
 
         System.out.println("Средняя цена: " + averagePrice);
-        System.out.println("Медианная цена: " + prices.get(medianPriceIndex));
+        System.out.println("Медианная цена: " + medianPrice);
         System.out.println("Разница между средней и медианной ценой: "
-                + (averagePrice - prices.get(medianPriceIndex)));
+                + Math.abs(averagePrice - medianPrice));
     }
 }
