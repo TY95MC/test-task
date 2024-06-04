@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,23 +16,29 @@ public class Ticket {
 
     private String origin;
 
-    private String origin_name;
+    @JsonProperty("origin_name")
+    private String originName;
 
     private String destination;
 
-    private String destination_name;
+    @JsonProperty("destination_name")
+    private String destinationName;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yy")
-    private LocalDate departure_date;
+    @JsonProperty("departure_date")
+    private LocalDate departureDate;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "H:mm")
-    private LocalTime departure_time;
+    @JsonProperty("departure_time")
+    private LocalTime departureTime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yy")
-    private LocalDate arrival_date;
+    @JsonProperty("arrival_date")
+    private LocalDate arrivalDate;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "H:mm")
-    private LocalTime arrival_time;
+    @JsonProperty("arrival_time")
+    private LocalTime arrivalTime;
 
     private String carrier;
 

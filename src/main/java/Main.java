@@ -20,7 +20,8 @@ public class Main {
         InputStream in = Main.class.getResourceAsStream("tickets.json");
         Order order = mapper.readValue(in, Order.class);
         List<Ticket> tickets = order.getTickets().stream()
-                .filter(t -> t.getOrigin().equals("VVO") && t.getDestination().equals("TLV"))
+                .filter(t -> t.getOrigin().equals("VVO") && t.getDestination().equals("TLV")
+                        || t.getOrigin().equals("TLV") && t.getDestination().equals("VVO"))
                 .collect(Collectors.toList());
 
         String carrier;
@@ -33,8 +34,8 @@ public class Main {
 
         for (Ticket t : tickets) {
             carrier = t.getCarrier();
-            arrival = LocalDateTime.of(t.getArrival_date(), t.getArrival_time());
-            departure = LocalDateTime.of(t.getDeparture_date(), t.getDeparture_time());
+            arrival = LocalDateTime.of(t.getArrivalDate(), t.getArrivalTime());
+            departure = LocalDateTime.of(t.getDepartureDate(), t.getDepartureTime());
             flightDuration = MINUTES.between(departure, arrival);
 
             carrierToDuration.put(carrier,
@@ -59,7 +60,7 @@ public class Main {
         }
 
         int medianPriceIndex;
-        medianPriceIndex = prices.size() % 2 == 0 ? (prices.size() - 1) / 2 : prices.size() / 2;
+        medianPriceIndex = prices.size() / 2;
 
         System.out.println("Средняя цена: " + averagePrice);
         System.out.println("Медианная цена: " + prices.get(medianPriceIndex));
