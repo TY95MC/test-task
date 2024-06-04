@@ -3,7 +3,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -38,16 +37,16 @@ public class Main {
             carrier = t.getCarrier();
             switch (t.getOrigin()) {
                 case "VVO":
-                    departure = LocalDateTime.of(t.getDepartureDate(),
-                            t.getDepartureTime()).atOffset(ZoneOffset.ofHours(10));
-                    arrival = LocalDateTime.of(t.getArrivalDate(),
-                            t.getArrivalTime()).atOffset(ZoneOffset.ofHours(3));
+                    departure = OffsetDateTime.of(t.getDepartureDate(),
+                            t.getDepartureTime(), (ZoneOffset.ofHours(10)));
+                    arrival = OffsetDateTime.of(t.getArrivalDate(),
+                            t.getArrivalTime(), (ZoneOffset.ofHours(3)));
                     break;
                 case "TLV":
-                    departure = LocalDateTime.of(t.getDepartureDate(),
-                            t.getDepartureTime()).atOffset(ZoneOffset.ofHours(3));
-                    arrival = LocalDateTime.of(t.getArrivalDate(),
-                            t.getArrivalTime()).atOffset(ZoneOffset.ofHours(10));
+                    departure = OffsetDateTime.of(t.getDepartureDate(),
+                            t.getDepartureTime(), (ZoneOffset.ofHours(3)));
+                    arrival = OffsetDateTime.of(t.getArrivalDate(),
+                            t.getArrivalTime(), (ZoneOffset.ofHours(10)));
                     break;
             }
 
