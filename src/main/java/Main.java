@@ -20,6 +20,7 @@ public class Main {
 
         InputStream in = Main.class.getResourceAsStream("tickets.json");
         Order order = mapper.readValue(in, Order.class);
+        in.close();
         List<Ticket> tickets = order.getTickets().stream()
                 .filter(t -> t.getOrigin().equals("VVO") && t.getDestination().equals("TLV")
                         || t.getOrigin().equals("TLV") && t.getDestination().equals("VVO"))
